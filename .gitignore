@@ -1,0 +1,6 @@
+bin/
+obj/
+.vs/
+LogOutput.log
+log.txt
+dist/

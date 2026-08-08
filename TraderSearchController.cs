@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Reflection;
+using EFT;
 using EFT.InventoryLogic;
 using EFT.UI;
 using EFT.UI.DragAndDrop;

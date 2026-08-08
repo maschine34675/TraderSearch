@@ -10,11 +10,11 @@ namespace TraderSearch.Patches
     {
         protected override MethodBase GetTargetMethod()
         {
-            return AccessTools.DeclaredMethod(typeof(KeyPressState), nameof(KeyPressState.Update));
+            return AccessTools.DeclaredMethod(typeof(InputKey), nameof(InputKey.Update));
         }
 
         [PatchPrefix]
-        private static bool Prefix(KeyPressState __instance)
+        private static bool Prefix(InputKey __instance)
         {
             if (__instance.Key < KeyCode.Alpha0 || __instance.Key > KeyCode.Tilde)
             {

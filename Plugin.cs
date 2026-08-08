@@ -10,7 +10,7 @@ namespace TraderSearch
     {
         public const string PluginGuid = "com.maschine.TraderSearch";
         public const string PluginName = "maschine-TraderSearch";
-        public const string PluginVersion = "1.0.0";
+        public const string PluginVersion = "2.0.0";
 
         public static ManualLogSource Log;
 
@@ -61,11 +61,11 @@ namespace TraderSearch
             try
             {
                 new SuppressAlphanumericCommandsPatch().Enable();
-                Log.LogDebug("KeyPressState.Update patch registered successfully.");
+                Log.LogDebug("InputKey.Update patch registered successfully.");
             }
             catch (Exception ex)
             {
-                Log.LogError("Failed to register KeyPressState.Update patch - letter/number keybinds will fire while typing in the search field: " + ex);
+                Log.LogError("Failed to register InputKey.Update patch - letter/number keybinds will fire while typing in the search field: " + ex);
             }
 
             try

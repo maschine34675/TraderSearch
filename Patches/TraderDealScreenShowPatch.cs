@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Reflection;
 using EFT;
 using EFT.InventoryLogic;
+using EFT.Quests;
+using EFT.Trading;
 using EFT.UI;
 using EFT.UI.DragAndDrop;
 using HarmonyLib;
@@ -16,13 +18,13 @@ namespace TraderSearch.Patches
         {
             return AccessTools.DeclaredMethod(typeof(TraderDealScreen), nameof(TraderDealScreen.Show), new[]
             {
-                typeof(TraderClass),
+                typeof(Trader),
                 typeof(Profile),
                 typeof(InventoryController),
                 typeof(ETradeMode),
                 typeof(ItemUiContext),
-                typeof(AbstractQuestControllerClass),
-                typeof(IEnumerable<TraderClass>)
+                typeof(QuestController),
+                typeof(IEnumerable<Trader>)
             });
         }
 
