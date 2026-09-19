@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace TraderSearch.Patches
 {
-    internal class SuppressAlphanumericCommandsPatch : ModulePatch
+    internal class TraderSearchSuppressAlphanumericPatch : ModulePatch
     {
         protected override MethodBase GetTargetMethod()
         {
@@ -20,8 +20,7 @@ namespace TraderSearch.Patches
             {
                 return true;
             }
-            TraderSearchController controller = TraderSearchController.Current;
-            if (controller == null || !controller.IsInputFocused)
+            if (!SearchFieldController.AnyInputFocused)
             {
                 return true;
             }

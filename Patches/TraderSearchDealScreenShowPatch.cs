@@ -12,7 +12,7 @@ using SPT.Reflection.Patching;
 
 namespace TraderSearch.Patches
 {
-    internal class TraderDealScreenShowPatch : ModulePatch
+    internal class TraderSearchDealScreenShowPatch : ModulePatch
     {
         protected override MethodBase GetTargetMethod()
         {

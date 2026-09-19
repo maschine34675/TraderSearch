@@ -8,7 +8,7 @@ using SPT.Reflection.Patching;
 
 namespace TraderSearch.Patches
 {
-    internal class HandbookFilterPatch : ModulePatch
+    internal class TraderSearchHandbookFilterPatch : ModulePatch
     {
         protected override MethodBase GetTargetMethod()
         {

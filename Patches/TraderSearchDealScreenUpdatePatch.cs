@@ -5,7 +5,7 @@ using SPT.Reflection.Patching;
 
 namespace TraderSearch.Patches
 {
-    internal class TraderDealScreenUpdatePatch : ModulePatch
+    internal class TraderSearchDealScreenUpdatePatch : ModulePatch
     {
         protected override MethodBase GetTargetMethod()
         {

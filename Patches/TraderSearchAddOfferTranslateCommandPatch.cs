@@ -1,23 +1,28 @@
 using System.Reflection;
 using EFT.InputSystem;
 using EFT.UI;
+using EFT.UI.Ragfair;
 using HarmonyLib;
 using SPT.Reflection.Patching;
 
 namespace TraderSearch.Patches
 {
-    internal class TraderScreensGroupTranslateCommandPatch : ModulePatch
+    internal class TraderSearchAddOfferTranslateCommandPatch : ModulePatch
     {
         protected override MethodBase GetTargetMethod()
         {
-            return AccessTools.DeclaredMethod(typeof(TraderScreensGroup), nameof(TraderScreensGroup.TranslateCommand));
+            return AccessTools.DeclaredMethod(typeof(Window<DialogWindowContext>), nameof(Window<DialogWindowContext>.TranslateCommand));
         }
 
         [PatchPrefix]
-        private static bool Prefix(ECommand command, ref InputNode.ETranslateResult __result)
+        private static bool Prefix(object __instance, ECommand command, ref InputNode.ETranslateResult __result)
         {
-            TraderSearchController controller = TraderSearchController.Current;
-            if (controller == null)
+            if (!(__instance is AddOfferWindow window))
+            {
+                return true;
+            }
+            AddOfferSearchController controller = AddOfferSearchController.Current;
+            if (controller == null || controller.gameObject != window.gameObject)
             {
                 return true;
             }

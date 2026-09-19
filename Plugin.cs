@@ -1,6 +1,7 @@
 using System;
 using BepInEx;
 using BepInEx.Logging;
+using SPT.Reflection.Patching;
 using TraderSearch.Patches;
 
 namespace TraderSearch
@@ -10,75 +11,38 @@ namespace TraderSearch
     {
         public const string PluginGuid = "com.maschine.TraderSearch";
         public const string PluginName = "maschine-TraderSearch";
-        public const string PluginVersion = "2.0.0";
+        public const string PluginVersion = "2.1.0";
 
         public static ManualLogSource Log;
 
         private void Awake()
         {
             Log = Logger;
-
-            try
-            {
-                new TraderDealScreenShowPatch().Enable();
-                Log.LogDebug("TraderDealScreen.Show patch registered successfully.");
-            }
-            catch (Exception ex)
-            {
-                Log.LogError("Failed to register TraderDealScreen.Show patch - the search field will not appear: " + ex);
-            }
-
-            try
-            {
-                new HandbookFilterPatch().Enable();
-                Log.LogDebug("HandbookFilterPanel.GetFilteredItems patch registered successfully.");
-            }
-            catch (Exception ex)
-            {
-                Log.LogError("Failed to register HandbookFilterPanel.GetFilteredItems patch - typing a search will not filter the trader grid: " + ex);
-            }
-
-            try
-            {
-                new TraderDealScreenUpdatePatch().Enable();
-                Log.LogDebug("TraderDealScreen.Update patch registered successfully.");
-            }
-            catch (Exception ex)
-            {
-                Log.LogError("Failed to register TraderDealScreen.Update patch - pressing SPACE while typing could buy the selected item: " + ex);
-            }
-
-            try
-            {
-                new TraderScreensGroupTranslateCommandPatch().Enable();
-                Log.LogDebug("TraderScreensGroup.TranslateCommand patch registered successfully.");
-            }
-            catch (Exception ex)
-            {
-                Log.LogError("Failed to register TraderScreensGroup.TranslateCommand patch - ESC and other game commands will fire while typing: " + ex);
-            }
-
-            try
-            {
-                new SuppressAlphanumericCommandsPatch().Enable();
-                Log.LogDebug("InputKey.Update patch registered successfully.");
-            }
-            catch (Exception ex)
-            {
-                Log.LogError("Failed to register InputKey.Update patch - letter/number keybinds will fire while typing in the search field: " + ex);
-            }
-
-            try
-            {
-                new TraderDealScreenFullClosePatch().Enable();
-                Log.LogDebug("TraderDealScreen.FullClose patch registered successfully.");
-            }
-            catch (Exception ex)
-            {
-                Log.LogError("Failed to register TraderDealScreen.FullClose patch - a stale search text may persist after closing the trader screen: " + ex);
-            }
+            Register(() => new TraderSearchDealScreenShowPatch(), "TraderDealScreen.Show", "the search field will not appear in the trader window");
+            Register(() => new TraderSearchHandbookFilterPatch(), "HandbookFilterPanel.GetFilteredItems", "typing a search will not filter the trader grid");
+            Register(() => new TraderSearchDealScreenUpdatePatch(), "TraderDealScreen.Update", "pressing SPACE while typing could buy the selected item");
+            Register(() => new TraderSearchScreensGroupTranslateCommandPatch(), "TraderScreensGroup.TranslateCommand", "ESC and other game commands will fire while typing in the trader window");
+            Register(() => new TraderSearchDealScreenFullClosePatch(), "TraderDealScreen.FullClose", "a stale search text may persist after closing the trader screen");
+            Register(() => new TraderSearchAddOfferShowPatch(), "AddOfferWindow.Show", "the search field will not appear in the flea market's Add Offer window");
+            Register(() => new TraderSearchAddOfferDeselectPatch(), "RagfairNewOfferContext.DeselectItem", "changing the search text will clear the items selected for the offer");
+            Register(() => new TraderSearchAddOfferTranslateCommandPatch(), "Window.TranslateCommand", "ESC will close the Add Offer window instead of clearing the search field");
+            Register(() => new TraderSearchAddOfferSubmitPatch(), "AddOfferWindow.AddOffer", "keys bound to posting an offer by other mods may post it while typing");
+            Register(() => new TraderSearchSuppressAlphanumericPatch(), "InputKey.Update", "letter/number keybinds will fire while typing in a search field");
 
             Log.LogInfo($"{PluginName} v{PluginVersion} loaded.");
+        }
+
+        private static void Register(Func<ModulePatch> create, string target, string consequence)
+        {
+            try
+            {
+                create().Enable();
+                Log.LogDebug(target + " patch registered successfully.");
+            }
+            catch (Exception ex)
+            {
+                Log.LogError("Failed to register " + target + " patch - " + consequence + ": " + ex);
+            }
         }
     }
 }

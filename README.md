@@ -1,39 +1,57 @@
 # TraderSearch
 
-Adds the search bar the trader window has always been missing. The stash and the flea market let you search for items by name — the trader buy screen does not. This mod puts a native-looking search field into the trader window header, between the assortment update button and the loyalty-level filter tabs.
+Find items by name where the game gives you no search: in the trader buy window and in the flea market's Add Offer window.
 
-## What it does
+## Features
 
-- Clones EFT's own stash search input field (native styling, native font) into the `TraderDealScreen` header between the **UpdateButton** and the **Loyalty Filter Panel**.
-- Typing filters the trader's buy grid live by localized item name and short name (case-insensitive substring match, same semantics as the vanilla stash search).
-- The search composes with the vanilla filters: the loyalty-level tabs and the handbook category tree are applied first, the search narrows their result.
-- Filtering rides the game's own `FilterPanel` pipeline, so the grid re-flows compactly exactly like it does when you click a category — no gaps, no grid rebuilds per keystroke.
-- The query is cleared automatically when you switch traders or close the trader screen.
-- While the search field is focused, game input is suppressed: SPACE cannot accidentally buy the selected item, ESC clears/defocuses the field instead of closing the screen, and letter/number keybinds do not fire.
+- **Trader window:** a search field between the assortment refresh button and the loyalty-level tabs. Typing narrows the trader's buy grid to matching items, and the grid closes up so the results sit together at the top.
+- **Flea market, Add Offer window:** a search field above your stash grid, next to AUTOSELECT SIMILAR. While you search, the grid shows only the matching items from your stash, gathered at the top; clear the field and your stash is back where you left it.
+- Matching uses the item's name and short name in your game language, ignoring upper/lower case. Part of a name is enough: "m855" finds both M855 and M855A1.
+- The search works together with the game's own filters: the trader's loyalty tabs and category list, and the Add Offer window's category icons (the selected icon stays selected while the results change).
+- The search clears itself when you switch traders, close the trader screen, or open the Add Offer window again.
+- While you type, the game does not react to your keys: letters and numbers do not trigger keybinds, SPACE does not buy the selected trader item, and a key another mod binds to posting an offer does not post it. ESC clears the field instead of closing the screen or window; press ESC again to close as usual.
 
-## Configuration
+## Requirements and compatibility
 
-None. Click the field, type, done.
+- SPT: 4.1.x, tested on SPT 4.1.5.
+- Components: client only; nothing to install on the server.
+- Dependencies: none.
+- UIFixes: both searches were tested together with UIFixes. While the Add Offer search field has focus, UIFixes' Enter/Space shortcut for posting offers does not post (see Usage).
+- Fika: compatible. The mod only changes local menu screens and sends nothing over the network.
 
 ## Installation
 
-Extract the release zip over your SPT game root (the folder containing `EscapeFromTarkov.exe`). It contains a single file:
+1. Extract the release ZIP into your SPT installation directory.
+2. Verify that `BepInEx/plugins/maschine-TraderSearch.dll` exists.
 
-```
-BepInEx/plugins/maschine-TraderSearch.dll
-```
+## Updating
 
-## Limitations / fragility
+Overwrite the existing `BepInEx/plugins/maschine-TraderSearch.dll`. There are no other files to remove.
 
-- Client-only mod; no server component. Safe to add or remove at any time.
-- The search filters the **buy** grid only. The sell side (your own items) already has the vanilla magnifier search.
-- Obfuscated type names (`GClass2412`) are build-specific and isolated in `Aliases.cs`; an EFT/SPT update will likely require re-mapping them. All patches log registration failures to the BepInEx console/log instead of breaking the game.
-- Compatible with UIFixes: its out-of-stock filter uses the same filter hook (both narrow the result independently) and its textbox keybind suppression overlaps harmlessly with this mod's.
+## Usage
 
-## Requirements
+- **Trader window:** open a trader's buy screen, click the search field left of the loyalty tabs and type.
+- **Flea market:** go to My Offers, click **+ ADD OFFER**, click the search field above your stash grid and type. The results appear after a short pause in typing; select them as usual. Items you selected stay selected while you change or clear the search.
+- **ESC** clears the field and leaves it. Clicking anywhere else also leaves the field and keeps the text.
+- While the Add Offer search field has focus, ENTER and SPACE never post the offer, even with a mod that binds them to posting. Leave the field first (click outside or press ESC).
 
-- SPT ~4.0.0
+## Configuration
 
-## License
+None.
 
-MIT
+## Known limitations
+
+- The trader search filters the buy grid only. For your own items on the sell side, use the game's own stash search (magnifier icon).
+- The Add Offer search checks the items lying directly in your stash. Items inside cases or backpacks cannot be picked in that window anyway, so a case is matched by its own name, not by its contents.
+- The Add Offer results only list items; to rearrange your stash by dragging, clear the search first.
+- An item you selected before searching stays selected even when the results do not show it.
+- With UIFixes' stash scroll synchronization turned on, closing the Add Offer window while a search is active can leave the synchronized stash scroll position where the results list was. Clearing the search before closing avoids it.
+- Only item names are searched, not item descriptions or categories.
+
+## Support
+
+Include the exact mod and SPT versions, expected and actual behavior, short reproduction steps, and the complete client log (`BepInEx/LogOutput.log`). Report problems on the mod's Forge page or as a GitHub issue at https://github.com/maschine34675/TraderSearch/issues.
+
+## License and credits
+
+MIT, see [LICENSE](LICENSE).
